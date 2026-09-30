@@ -1,0 +1,53 @@
+name: profile
+
+on:
+  schedule:
+    - cron: "0 18 * * *" # 毎日 03:00 JST
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+env:
+  HACKGEN_VERSION: v2.10.0
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install fonttools brotli
+      - uses: actions/cache@v4
+        id: font
+        with:
+          path: fonts
+          key: hackgen-nf-${{ env.HACKGEN_VERSION }}
+      - if: steps.font.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL -o hackgen.zip "https://github.com/yuru7/HackGen/releases/download/${HACKGEN_VERSION}/HackGen_NF_${HACKGEN_VERSION}.zip"
+          unzip -j hackgen.zip '*/HackGen35ConsoleNF-Regular.ttf' '*/HackGen35ConsoleNF-Bold.ttf' -d fonts
+      # 前日比の基準にするため、前回までの history.json を output ブランチから引き継ぐ。
+      - run: |
+          mkdir -p dist
+          git fetch --depth=1 origin output && git show origin/output:history.json > dist/history.json || true
+      # 非公開リポジトリの分も数えるため、repo スコープの classic PAT を STATS_TOKEN に登録する。
+      # fine-grained PAT は所有者ごとにしか権限を持てず、所属 organization のコミットを数え漏らす。
+      - run: node scripts/generate.mjs dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.STATS_TOKEN || secrets.GITHUB_TOKEN }}
+          FONT_DIR: fonts
+      # 生成物で main の履歴を汚さないよう、output ブランチを毎回 1 commit で上書きする。
+      - working-directory: dist
+        run: |
+          git init -q -b output
+          git add .
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com commit -qm "chore: プロフィール画像を更新する"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" output

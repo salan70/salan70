@@ -1,6 +1,12 @@
-<a href="https://github.com/anuraghazra/github-readme-stats">
-  <img align="left" height="160px" src="https://github-readme-stats-clone-cs68.vercel.app/api?username=salan70&count_private=true&show_icons=true&theme=algolia" />
-</a>
-<a href="https://github.com/anuraghazra/github-readme-stats">
-  <img align="left" height="160px" src="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/top-langs/?username=salan70&layout=compact&theme=algolia" />
-</a>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/salan70/salan70/output/tui-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/salan70/salan70/output/tui-light.svg">
+  <img alt="salan70 — Tetsuo Oda" src="https://raw.githubusercontent.com/salan70/salan70/output/tui-dark.svg" width="100%">
+</picture>
+
+<p align="center">
+  <a href="https://github.com/salan70/repomonk"><code>▸ repomonk</code></a>&nbsp;
+  <a href="https://github.com/salan70/docbridge"><code>▸ docbridge</code></a>&nbsp;
+  <a href="https://github.com/salan70/keysync"><code>▸ keysync</code></a>&nbsp;
+  <a href="https://github.com/salan70/uiux-numa"><code>▸ uiux-numa</code></a>
+</p>
